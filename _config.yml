@@ -10,23 +10,23 @@ whitelist:
   - jekyll-paginate
 
 # Site settings
-title: "Stephane Erbrech - Blog"
+title: "Stéphane Erbrech - Blog"
 description: > # this means to ignore newlines until "email:"
    A Jekyll theme - Medium inspired
 
 email: stephane.erbrech@gmail.com
 #blog logo
-logo: "/blog/assets/images/df_logo.jpg"
+logo: "/blog/assets/images/logo.png"
 # blog cover
 cover: "/blog/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
 
-name: 'Stephane Erbrech'
-author: 'Stephane Erbrech'
+name: 'Stéphane Erbrech'
+author: 'Stéphane Erbrech'
 author_image: "/blog/assets/images/author.jpg"
 
 paginate:	5
 
-url: "http://serbrech.githu.io/blog" # the base hostname & protocol for your site
+url: "http://serbrech.github.io/blog" # the base hostname & protocol for your site
 baseurl: "/blog"
 #used to display twitter cards
 twitter_handle: '@serbrech'
