@@ -2,9 +2,15 @@
 gems:
   - jemoji
   - jekyll-paginate
+  - jekyll-redirect-from
+
+whitelist:
+  - jekyll-redirect-from
+  - jemoji
+  - jekyll-paginate
 
 # Site settings
-title: "Mediator"
+title: "Stephane Erbrech - Blog"
 description: > # this means to ignore newlines until "email:"
    A Jekyll theme - Medium inspired
 
@@ -20,8 +26,8 @@ author_image: "/blog/assets/images/author.jpg"
 
 paginate:	5
 
-url: "http://***.***/blog" # the base hostname & protocol for your site
-baseurl: "http://serbrech.github.io/blog"
+url: "http://serbrech.githu.io/blog" # the base hostname & protocol for your site
+baseurl: "/blog"
 #used to display twitter cards
 twitter_handle: '@serbrech'
 
