@@ -17,5 +17,4 @@ And pay attention to how it checks for the exit code (don’t forget the -PassTh
 
 Here is the small powershell wrapper I used for the roundhouse excutable.
 
-
 {% gist 8333695 %}
