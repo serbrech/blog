@@ -7,6 +7,6 @@ tags:
 - oops
 tumblr_url: http://alsagile.com/post/22374533638/unhandledexception
 ---
-https://gist.github.com/2593343
+{% gist 2593343 %}
 
 It never crashes!
