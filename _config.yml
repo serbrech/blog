@@ -26,7 +26,7 @@ author_image: "/blog/assets/images/author.jpg"
 
 paginate:	5
 
-url: "http://serbrech.github.io/blog" # the base hostname & protocol for your site
+url: "http://www.erbrech.com" # the base hostname & protocol for your site
 baseurl: "/blog"
 #used to display twitter cards
 twitter_handle: '@serbrech'
