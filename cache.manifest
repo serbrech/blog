@@ -1,0 +1,26 @@
+CACHE MANIFEST
+
+CACHE:
+
+#style sheets
+http://brick.a.ssl.fastly.net/Linux+Libertine:400,400i,700,700i/Open+Sans:400,400i,700,700i
+http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
+http://www.erbrech.com/blog/css/main.css
+http://www.erbrech.com/blog/css/print.css
+
+#images
+http://www.erbrech.com/blog/assets/images/alsace-pano.jpg
+http://www.erbrech.com/blog/assets/images/author.jpg
+http://www.erbrech.com/blog/assets/images/favicon.ico
+http://www.erbrech.com/blog/assets/images/favicon.png
+http://www.erbrech.com/blog/assets/images/logo.png
+http://www.erbrech.com/blog/assets/images/logo100.png
+
+#javascript files
+https://code.jquery.com/jquery-1.11.1.min.js
+http://www.erbrech.com/blog/assets/js/jquery.fitvids.js
+http://www.erbrech.com/blog/assets/js/index.js
+http://www.erbrech.com/blog/assets/js/readingTime.min.js
+
+NETWORK:
+*
