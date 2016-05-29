@@ -26,17 +26,23 @@ After running this, the msmq service will not be running, and it will not start.
 And that's where I save my future self from a day of pulling my hair off trying to figure out how this works.
 The files were created by SYSTEM, so you cannot change the ACL on it.
 you first have to take ownership :
+
 {% highlight powershell %}
-    PS C:\> takeown /F 'E:\msmq' /R /D y
+PS C:\> takeown /F 'E:\msmq' /R /D y
 {% endhighlight %}
+
 then reset the inheritance settings of the acl on the files :
+
 {% highlight powershell %}
     PS C:\> icacls 'E:\msmq' /reset /T /C
 {% endhighlight %}
+
 and finally, give the rights to Network Service :
+
 {% highlight powershell %}
     PS C:\> icacls 'E:\msmq' "/grant:r" "NT AUTHORITY\NetworkService:(OI)(CI)(M)" /T /C
 {% endhighlight %}
+
 A closer look at these commands. Msmq runs as Network Services. The account needs rights on the msmq and LQS sub folder. A few things happen here.
 
 - `/T` means traverse, so all subitems get the same rights.
