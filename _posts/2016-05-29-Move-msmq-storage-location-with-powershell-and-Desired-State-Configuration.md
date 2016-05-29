@@ -17,9 +17,11 @@ OK, so how do we go about moving it?
 It turns out that with Powershell 4.0, Microsoft added a nice little helper : [Set-MsmqQueueManager]("https://technet.microsoft.com/en-us/library/dn391736.aspx")
 
 This requires the msmq service to be running, but you can use it like this :
+
 {% highlight powershell %}
-    PS C:\> Set-MsmqQueueManager -MsgStore E:\MSMQ\ -TransactionLogStore C:\MSMQ\ -LogMsgStore E:\MSMQ\
+PS C:\> Set-MsmqQueueManager -MsgStore E:\MSMQ\ -TransactionLogStore C:\MSMQ\ -LogMsgStore E:\MSMQ\
 {% endhighlight %}
+
 And that will move the few already existing msmq files to the given folder. Great! But of course, it could not be so easy...
 After running this, the msmq service will not be running, and it will not start. No panic. The reason is that the user running MSMQ does not have the rights to its files anymore.
 
@@ -34,13 +36,13 @@ PS C:\> takeown /F 'E:\msmq' /R /D y
 then reset the inheritance settings of the acl on the files :
 
 {% highlight powershell %}
-    PS C:\> icacls 'E:\msmq' /reset /T /C
+PS C:\> icacls 'E:\msmq' /reset /T /C
 {% endhighlight %}
 
 and finally, give the rights to Network Service :
 
 {% highlight powershell %}
-    PS C:\> icacls 'E:\msmq' "/grant:r" "NT AUTHORITY\NetworkService:(OI)(CI)(M)" /T /C
+PS C:\> icacls 'E:\msmq' "/grant:r" "NT AUTHORITY\NetworkService:(OI)(CI)(M)" /T /C
 {% endhighlight %}
 
 A closer look at these commands. Msmq runs as Network Services. The account needs rights on the msmq and LQS sub folder. A few things happen here.
