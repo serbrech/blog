@@ -87,27 +87,28 @@ We'll want to restore the database, and you can do that with the maintainDB.sh s
  4. restore backup
  6. run teamcity
 
-We'll start with the db restore. We will bash into a teamcity container to get access to the maintainDB.sh script. the script needs the database.properties, the config folder and the backup zip file.
+We'll start with the db restore. We will bash into a teamcity container to get access to the maintainDB.sh script. we call the container `restore-tc`.  
+The script needs the `database.properties` file, an empty config folder, backup zip file and a connection to postgres :
 
     docker run -it --name restore-tc --rm \
-      --link tc-postgres \
-      --volumes-from teamcity-data \
+      --link tc-postgres \ # gives us a connection to postgres
+      --volumes-from teamcity-data \ # gives us the config folder
       jetbrains/teamcity-server /bin/bash
 
-Then we will copy the backup and the database.properties and the driver libraries into the container using [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) :
+Then we will copy the backup and the `database.properties` and the driver libraries into the container. We'll use [docker cp](https://docs.docker.com/engine/reference/commandline/cp/) to do that :
 
-so from another console, we run :
+So from another console, we run :
 
      docker cp C:\teamcityupgrade\TeamCity_Backup.zip restore-tc:/backup.zip
 
-For the database.properties, I'll first edit the url on my local machine to use the linked postgres container name instead of an ip address :
+We edit the database.properties to connect to our postgres, and copy it too :
 
-    #Fri Mar 18 14:01:10 UTC 2016
     connectionProperties.user=postgres
     connectionProperties.password=<password_here>
     connectionUrl=jdbc\:postgresql\://tc-postgres\:5432/  
 
-<!-- break line -->  
+Note the url uses the postgres container name. this works thanks to the link parameter in the previous command.
+Then we copy it over :
 
     docker cp C:\teamcityupgrade\teamcity\config\database.properties restore-tc:/restore-database.properties
 
@@ -115,7 +116,7 @@ And finally the jdbc drivers for postgres:
 
      docker cp C:\teamcityupgrade\teamcity\lib\jdbc\ restore-tc:/teamcity/jdbc/
 
-Now, to restore the database, let's go back to the bash console inside our restore-tc container and run the maintainDB script :
+Now, to restore the database, let's go back to the bash console inside our `restore-tc` container and run the `maintainDB.sh` script ([documentation](https://confluence.jetbrains.com/display/TCD9/Restoring+TeamCity+Data+from+Backup#RestoringTeamCityDatafromBackup-Performingfullrestore)):
 
     :/# /opt/teamcity/bin/maintainDB.sh restore \
         -A /teamcity/ \
