@@ -6,14 +6,15 @@ tags: teamcity, docker
 image: "/blog/assets/article_images/2016-07-22-migrating-teamcity/tcplusdocker.png"
 image2: "/blog/assets/article_images/2016-07-22-migrating-teamcity/tcplusdocker.png"
 ---
-Using separate data container gives you much more flexibility in how you upgrade, test, or backup the services. You then have a pure service that you can kill restart throw away and upgrade without worrying about the configuration. The configiuration will be provided by the long-live data container instead.
-you dont need to backup the service. only the data container associated to it, etc...
+
+Using separate data container gives you much more flexibility in how you upgrade, test, or backup the services. You then have a pure service that you can kill restart throw away and upgrade without worrying about the configuration. The configuration will be provided by the long-live data container instead.
+you don't need to backup the service. only the data container associated to it, etc...
 
 We'll have 4 pieces :  
 
- 1. Teamcity server  
+ 1. Teamcity server : [official image](https://hub.docker.com/r/jetbrains/teamcity-server/)
  2. Teamcity data  
- 3. Postgres instance  
+ 3. Postgres instance : [official image](https://hub.docker.com/_/postgres/)
  4. Postgres data  
 
 ## Let's start with the data containers
@@ -29,22 +30,22 @@ you can take a peak at it by doing the following :
 
     C:\> docker run -it --rm --volumes-from teamcity-data ubuntu ls
     bin   core  etc   lib    media  opt   root  sbin  sys       tmp  var
-    boot  dev   home  lib64  mnt    proc  run   srv   ``teamcity``  usr
+    boot  dev   home  lib64  mnt    proc  run   srv   *teamcity*  usr
 
 We map the volumes from our newly created teamcity-data container into a new ubuntu container and we run ls. we can see the `teamcity` folder, mounted from our teamcity-data container.  
 
 ## Postgres
 
-Postgres is quite straight forward. we'll start the postgres conainter, and take the volume from our postgres-data container :
+Postgres is quite straight forward. We willll start the postgres container, and take the volume from our postgres-data container :
 
     docker run --volumes-from postgres-data \
       --name tc-postgres \
       -e POSTGRES_PASSWORD=<password_here> \
       -e PGDATA=/postgres/pgdata postgres
 
-postgres image uses some environment variables during setup to define the password and the data folder for our db. the user is postgres by default.
+The postgres image uses some environment variables during setup to define the password and the data folder for our db. The user is postgres by default. That's what is provided after the -e parameter.
 
-that's about it. Now we get :
+And that's about it. Now we get :
 
     C:\> docker ps
     CONTAINER ID     IMAGE       COMMAND                  CREATED       STATUS       PORTS       NAMES
@@ -55,7 +56,7 @@ that's about it. Now we get :
 
 ### Restoring backup
 
-I took a backup of the existing teamcity config folders, from the teamcity UI, and unzipped it on my local machine :
+I [took a backup of our existing teamcity](https://confluence.jetbrains.com/display/TCD10/Creating+Backup+from+TeamCity+Web+UI), from the teamcity UI, and unzipped it on my local machine :
 
     C:\teamcityupgrade> ls
 
@@ -81,7 +82,7 @@ I took a backup of the existing teamcity config folders, from the teamcity UI, a
     -a----       2016-07-22  10:56 AM            681 export.report
     -a----       2016-07-22  10:56 AM             87 version.txt
 
-We'll want to restore the database, and you can do that with the maintainDB.sh script from teamcity. that's in the TC container. Let's see what we need :
+We'll want to restore the database, and you can do that with the maintainDB.sh script from Teamcity. That's in the TC container. Let's see what we need :
 
  1. Use the volumes from our teamcity-data container
  2. Tell teamcity to use our volume folder (env variable)
@@ -109,7 +110,7 @@ We edit the database.properties to connect to our postgres, and copy it too :
     connectionProperties.password=<password_here>
     connectionUrl=jdbc\:postgresql\://tc-postgres\:5432/  
 
-Note the url uses the postgres container name. this works thanks to the link parameter in the previous command.
+Note the url uses the postgres container name. This works thanks to the link parameter in the previous command.
 Then we copy it over :
 
     docker cp C:\teamcityupgrade\teamcity\config\database.properties restore-tc:/restore-database.properties
