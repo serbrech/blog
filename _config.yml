@@ -12,7 +12,7 @@ whitelist:
 # Site settings
 title: "Stéphane Erbrech - Blog"
 description: > # this means to ignore newlines until "email:"
-   A Jekyll theme - Medium inspired
+  Saving keystrokes
 
 email: stephane.erbrech@gmail.com
 #blog logo
