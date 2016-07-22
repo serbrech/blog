@@ -7,27 +7,29 @@ tags: teamcity, docker
 Using separate data container gives you much more flexibility in how you upgrade, test, or backup the services. You then have a pure service that you can kill restart throw away and upgrade without worrying about the configuration. The configiuration will be provided by the long-live data container instead.
 you dont need to backup the service. only the data container associated to it, etc...
 
-We'll have 4 pieces :
-1. Teamcity server
-2. Teamcity data
-3. Postgres instance
-4. Postgres data
+We'll have 4 pieces :  
+
+ 1. Teamcity server  
+ 2. Teamcity data  
+ 3. Postgres instance  
+ 4. Postgres data  
 
 ## Let's start with the data containers
 
 We'll use an empty image to create empty data containers : `tianon/true`
-(If you want to know more, I prefer (this reasoning, using an empty image)[http://jdemarks.azurewebsites.net/2015/04/1083/] to (this one that uses the same base image as the app)[http://container42.com/2014/11/18/data-only-container-madness/], but maybe I'm wrong, let me know :))
+(If you want to know more, I prefer [this reasoning, using an empty image]("http://jdemarks.azurewebsites.net/2015/04/1083/") to [this one that uses the same base image as the app]("http://container42.com/2014/11/18/data-only-container-madness/"), but maybe I'm wrong, let me know :))  
+
     docker create -v /teamcity --name teamcity-data tianon/true echo 'teamcity data'
     docker create -v /postgres --name postgres-data tianon/true echo 'postgres data'
 
-That gives you a container with nothing but 1 folder named /teamcity or /postgres.
+That gives you a container with nothing but 1 folder named `/teamcity` or `/postgres`.
 you can take a peak at it by doing the following :
 
     C:\> docker run -it --rm --volumes-from teamcity-data ubuntu ls
     bin   core  etc   lib    media  opt   root  sbin  sys       tmp  var
     boot  dev   home  lib64  mnt    proc  run   srv   ``teamcity``  usr
 
-We map the volumes from our newly created teamcity-data container into a new ubuntu container and we run ls. we can see the `teamcity` folder, mounted from our teamcity-data container.
+We map the volumes from our newly created teamcity-data container into a new ubuntu container and we run ls. we can see the `teamcity` folder, mounted from our teamcity-data container.  
 
 ## Postgres
 
@@ -43,8 +45,8 @@ postgres image uses some environment variables during setup to define the passwo
 that's about it. Now we get :
 
     C:\> docker ps
-    CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS               NAMES
-    7f43642f2c2e        postgres                    "/docker-entrypoint.s"   2 hours ago         Up 2 hours          5432/tcp            tc-postgres
+    CONTAINER ID     IMAGE       COMMAND                  CREATED       STATUS       PORTS       NAMES
+    7f43642f2c2e     postgres    "/docker-entrypoint.s"   2 hours ago   Up 2 hours   5432/tcp    tc-postgres
 
 
 ## Teamcity server
@@ -60,7 +62,7 @@ I took a backup of the existing teamcity config folders, from the teamcity UI, a
     Mode                LastWriteTime         Length Name
     ----                -------------         ------ ----
     d-----       2016-07-22  01:05 PM                teamcity
-    -a----       2016-07-22  01:01 PM      124890616 TeamCity_Backup_all_beforeupgrade_20160722_105622.zip
+    -a----       2016-07-22  01:01 PM      124890616 TeamCity_Backup.zip
 
     C:\teamcityupgrade> ls .\teamcity\
 
@@ -96,7 +98,7 @@ Then we will copy the backup and the database.properties and the driver librarie
 
 so from another console, we run :
 
-     docker cp C:\teamcityupgrade\TeamCity_Backup_all_beforeupgrade_20160722_105622.zip restore-tc:/backup.zip
+     docker cp C:\teamcityupgrade\TeamCity_Backup.zip restore-tc:/backup.zip
 
 For the database.properties, I'll first edit the url on my local machine to use the linked postgres container name instead of an ip address :
 
@@ -104,7 +106,8 @@ For the database.properties, I'll first edit the url on my local machine to use 
     connectionProperties.user=postgres
     connectionProperties.password=<password_here>
     connectionUrl=jdbc\:postgresql\://tc-postgres\:5432/
-<!-- -->
+<!-- break line -->  
+
     docker cp C:\teamcityupgrade\teamcity\config\database.properties restore-tc:/restore-database.properties
 
 And finally the jdbc drivers for postgres:
@@ -118,7 +121,7 @@ Now, to restore the database, let's go back to the bash console inside our resto
         -F /backup.zip \
         -T /restore-database.properties
 
-Voilà backup is restored!
+Voilà, backup is restored!
 
 ### Running Teamcity
 
@@ -126,14 +129,15 @@ We could keep that container and run it from there, but we can also kill it and 
 all the config data is in the `teamcity-data` data container now.
 so we exit the `restore-tc` container (we started it with --rm so it will be stopped and removed).
 
-What we want :
-1. data from the teamcity-data (where we restored the config)
-2. tell teamcity to use the /teamcity folder as data folder
-2. use db from postgres-tc (we also just restored it)
-3. port exposed
-4. run as daemon
+What we want :  
 
-To run it, the full command will be :
+ 1. data from the teamcity-data (where we restored the config)
+ 2. tell teamcity to use the /teamcity folder as data folder
+ 2. use db from postgres-tc (we also just restored it)
+ 3. port exposed
+ 4. run as daemon
+
+To run it, the full command will be :  
 
     docker run -d --name teamcity \
        -p80:8111 \
