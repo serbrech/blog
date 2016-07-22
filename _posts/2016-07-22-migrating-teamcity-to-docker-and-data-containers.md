@@ -36,7 +36,7 @@ We map the volumes from our newly created teamcity-data container into a new ubu
 
 ## Postgres
 
-Postgres is quite straight forward. We willll start the postgres container, and take the volume from our postgres-data container :
+Postgres is quite straight forward. We will start the postgres container, and take the volume from our postgres-data container :
 
     docker run --volumes-from postgres-data \
       --name tc-postgres \
