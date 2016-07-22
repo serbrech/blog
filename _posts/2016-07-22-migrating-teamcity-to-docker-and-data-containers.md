@@ -91,7 +91,7 @@ We'll want to restore the database, and you can do that with the maintainDB.sh s
  6. run teamcity
 
 We'll start with the db restore. We will bash into a teamcity container to get access to the maintainDB.sh script. we call the container `restore-tc`.  
-The script needs the `database.properties` file, an empty config folder, backup zip file and a connection to postgres :
+The script needs the `database.properties` file, an empty config folder, the zipped backup file and a connection to postgres :
 
     docker run -it --name restore-tc --rm \
       --link tc-postgres \ # gives us a connection to postgres
