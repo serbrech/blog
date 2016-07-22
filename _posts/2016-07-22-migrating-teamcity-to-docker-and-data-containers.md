@@ -3,6 +3,7 @@ layout: post
 title: Migrating TeamCity to docker with data containers
 date: '2016-07-22T17:45:00+02:00'
 tags: teamcity, docker
+image: "/blog/assets/article_images/2016-07-22-migrating-teamcity/tcplusdocker.png"
 ---
 Using separate data container gives you much more flexibility in how you upgrade, test, or backup the services. You then have a pure service that you can kill restart throw away and upgrade without worrying about the configuration. The configiuration will be provided by the long-live data container instead.
 you dont need to backup the service. only the data container associated to it, etc...
