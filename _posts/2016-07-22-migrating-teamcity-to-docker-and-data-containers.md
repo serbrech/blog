@@ -144,4 +144,4 @@ To run it, the full command will be :
 
 Aaand... it works (I mapped it to port 8111 in my test) :)
 
-![it works!](/blog/assets/article_images/2016-07-22-migrating-teamcity/tc-works.png)]
+![it works!](/blog/assets/article_images/2016-07-22-migrating-teamcity/tc-works.png)
