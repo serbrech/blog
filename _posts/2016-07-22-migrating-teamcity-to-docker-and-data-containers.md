@@ -17,7 +17,7 @@ We'll have 4 pieces :
 ## Let's start with the data containers
 
 We'll use an empty image to create empty data containers : `tianon/true`
-(If you want to know more, I prefer [this reasoning, using an empty image]("http://jdemarks.azurewebsites.net/2015/04/1083/") to [this one that uses the same base image as the app]("http://container42.com/2014/11/18/data-only-container-madness/"), but maybe I'm wrong, let me know :))  
+(If you want to know more, I prefer [this reasoning, using an empty image](http://jdemarks.azurewebsites.net/2015/04/1083/) to [this one that uses the same base image as the app](http://container42.com/2014/11/18/data-only-container-madness/), but maybe I'm wrong, let me know :))  
 
     docker create -v /teamcity --name teamcity-data tianon/true echo 'teamcity data'
     docker create -v /postgres --name postgres-data tianon/true echo 'postgres data'
