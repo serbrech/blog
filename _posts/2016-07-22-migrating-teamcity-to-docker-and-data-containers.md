@@ -105,7 +105,8 @@ For the database.properties, I'll first edit the url on my local machine to use 
     #Fri Mar 18 14:01:10 UTC 2016
     connectionProperties.user=postgres
     connectionProperties.password=<password_here>
-    connectionUrl=jdbc\:postgresql\://tc-postgres\:5432/
+    connectionUrl=jdbc\:postgresql\://tc-postgres\:5432/  
+
 <!-- break line -->  
 
     docker cp C:\teamcityupgrade\teamcity\config\database.properties restore-tc:/restore-database.properties
