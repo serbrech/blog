@@ -7,6 +7,8 @@ image: "/blog/assets/article_images/2016-07-22-migrating-teamcity/tcplusdocker.p
 image2: "/blog/assets/article_images/2016-07-22-migrating-teamcity/tcplusdocker.png"
 ---
 
+Jetbrains released [docker images for Teamcity](https://hub.docker.com/r/jetbrains/teamcity-server/) (although not "official" as per the docker hub). I need to document the process internally, so I might as well turn it into an article and share it with everyone.  
+
 Using separate data container gives you much more flexibility in how you upgrade, test, or backup the services. You then have a pure service that you can kill restart throw away and upgrade without worrying about the configuration. The configuration will be provided by the long-live data container instead.
 you don't need to backup the service. only the data container associated to it, etc...
 
