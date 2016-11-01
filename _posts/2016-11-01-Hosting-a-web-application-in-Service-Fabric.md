@@ -15,7 +15,8 @@ So, to assess the platform, I look at what it takes to take an existing small we
 It turns out that it is relatively easy.
 My application test is a Nancy web app, deployed to IIS. this is a write up of what I had to do.
 
-## Where to start.
+## Where do we start?
+
 In Service Fabric, you have 2 main choices when it comes to the type of service you can host : Stateful or Stateless.
 A Stateless service is simply an endpoint that doesn't have any state attached to it. An API, a Website, or a gateway for example. Stateless service can have a state, but it will be stored externally in a database for example.
 A Stateful service can store the data internally, using Reliable Collections provided by Service Fabric. These look just like your usual collections, but Service Fabric makes them highly available and consistent across your services.
@@ -34,6 +35,7 @@ I start by adding the owin packages to my project :
      "Microsoft.Owin.Hosting": "3.0.1"
 
 We add and OWIN Startup configuration class, a Program.cs file with a `static void Main` and set our project to be a Console App. I will get to why I take parameters in :
+
 {% highlight csharp %}
 [assembly: OwinStartup(typeof(Web.Startup))]
 
@@ -50,32 +52,32 @@ namespace Web
 {% endhighlight %}
 
 {% highlight csharp %}
-    public class Program
-    {
-        public static void Main(params string[] args)
-        {
-           
-            int port = 1234;
-            string appRoot = "";
-            // get port and approot from arguments if provided.
-            if (args.Any())
-            {
-                int.TryParse(args[0], out port);
-                appRoot = args[1]?.TrimStart('/') ?? "";
-            }
+public class Program
+{
+   public static void Main(params string[] args)
+   {
 
-            var url = $"http://+:{port}/{appRoot}";
-            using (WebApp.Start(url))
-            {
-                Console.WriteLine("Listening at " + url);
-                Console.ReadLine();
-            }
-        }
-    }
+       int port = 1234;
+       string appRoot = "";
+       // get port and approot from arguments if provided.
+       if (args.Any())
+       {
+           int.TryParse(args[0], out port);
+           appRoot = args[1]?.TrimStart('/') ?? "";
+       }
+
+       var url = $"http://+:{port}/{appRoot}";
+       using (WebApp.Start(url))
+       {
+           Console.WriteLine("Listening at " + url);
+           Console.ReadLine();
+       }
+   }
+}
 {% endhighlight %}
 
 Set build output to Console Application : 
-![Console Application](/blog/assets/article_images/2016-11-01-hosting/consoleapp.png)
+![Console Application](/blog/assets/article_images/2016-11-01-hosting/console.png)
 
 
 When we self-host, [we have to tell our web framework where to find the files](http://stackoverflow.com/questions/24571258/how-do-you-resolve-a-virtual-path-to-a-file-under-an-owin-host) (views, content, etc..).  
@@ -117,20 +119,24 @@ I will focus on the tweaks I made to get it all work nicely.
 2. Chose link for the Code Package Behaviour on project creation (it's the default).  
 In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) : 
 
-    <Content Include="..\Web\bin\**\*.*"> 
-      <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </Content> 
+{% highlight xml %}
+<Content Include="..\Web\bin\**\*.*"> 
+     <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
+</Content> 
+{% endhighlight %}  
 
 3. ApplicationManifest  
-Nothing special here, except the ApplicationTypeName attribute.  
+Nothing special here, except the ApplicationTypeName attribute.
 
-    <ApplicationManifest ApplicationTypeName="MyApp" ...>
-    
+{% highlight xml %}
+<ApplicationManifest ApplicationTypeName="MyApp" ...>
+{% endhighlight %}
+
 This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that now.  
 
-4. ServiceManifest  
+4. ServiceManifest    
 That one is more interesting. Here is mine : 
-
+{% highlight xml %}
     <ServiceManifest Name="MyAppPkg"
                  Version="1.0.1"
                  xmlns="http://schemas.microsoft.com/2011/01/fabric"
@@ -161,6 +167,7 @@ That one is more interesting. Here is mine :
          </Endpoints>
        </Resources>
      </ServiceManifest>
+{% endhighlight %}  
 
 That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to Codebase. that's our binary folder in the package, and we pass some arguments.
 We define an http endpoint that listens on port 3000 (same as we passed as argument to our app), and a pathSuffix that I am going to explain in the last part of this post.
@@ -179,13 +186,16 @@ If you don't match the rootpath from the proxy to the rootpath of your app, the 
 
 So I let the manifest define the root path of my application, which is based on the Service Fabric convention (Appname/EndpointName).
 that's the EntryPoint Argument node :  
-
-     <Arguments>3000 MyApp/Web</Arguments>
+{% highlight xml %}
+<Arguments>3000 MyApp/Web</Arguments>
+{% endhighlight %}  
 
 The application responds on localhost:3000/MyApp/Web, so we have to tell ServiceFabric that this is where our app is.
-that's the role of the Endpoint node : 
+that's the role of the Endpoint node :  
 
-    <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
+{% highlight xml %}
+<Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
+{% endhighlight %}  
 
 If these match, you are good to go.  
 
@@ -203,7 +213,7 @@ To host an existing IIS web app on Service Fabric we :
  - Add a Service Fabric Guest Executable project to the solution
  - Linked our binaries to it
  - Adjusted the xml metadata
- - Parameterized the application root and the port to play nice with reverse proxy
+ - Parameterized the application root and the port to play nice with reverse proxy  
  
 As a result, our application does not need to be aware of Service Fabric. It can still be run and debugged locally as any other application too. This is very nice. We get all the benefits from the platform, without taking any dependencies on it in any way!  
 
