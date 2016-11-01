@@ -117,19 +117,17 @@ I will focus on the tweaks I made to get it all work nicely.
 1. Set your project's Platform Target x64 (Project Properties > Build > Platform Target). Service Fabric supports only x64.  
 
 2. Chose link for the Code Package Behaviour on project creation (it's the default).  
-In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) : 
+In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) :
 
-  {% highlight xml %}
-     <Content Include="..\Web\bin\**\*.*"> 
-          <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
-     </Content> 
-  {% endhighlight %}  
+          <Content Include="..\Web\bin\**\*.*"> 
+               <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
+          </Content>  
 
 3. ApplicationManifest  
 Nothing special here, except the ApplicationTypeName attribute.  
-     {% highlight xml %}
-     <ApplicationManifest ApplicationTypeName="MyApp" ...>
-     {% endhighlight %}
+
+          <ApplicationManifest ApplicationTypeName="MyApp" ...>
+     
      
 This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that below.  
 
