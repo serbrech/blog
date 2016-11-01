@@ -177,26 +177,26 @@ Http endpoints are exposed automatically through ServiceFabric reversee proxy at
 
 So, for us locally, that would be : `http://localhost:19081/Myapp/Web/`
 The challenge with reverse proxy, is that internally, your app doesn't know it is accessed from a different location.
-If you don't match the rootpath from the proxy to the rootpath of your app, the links in your web application will be broken.
+**If you don't match the rootpath from the proxy to the rootpath of your app, the links in your web application will be broken.**
 
-So I let the manifest define the root path of my application, which is based on the Service Fabric convention (Appname/EndpointName).
-that's the EntryPoint Argument node :  
+We are going to let the manifest define the root path of my application, which is based on the Service Fabric convention (AppName/EndpointName).  
+This is our the EntryPoint Argument node :  
 {% highlight xml %}
 <Arguments>3000 MyApp/Web</Arguments>
 {% endhighlight %}  
 
-The application responds on `http://localhost:3000/MyApp/Web`, so we have to tell ServiceFabric that this is where our app is.
-that's the role of the Endpoint node :  
+The application responds on `http://localhost:3000/MyApp/Web`. Now we have to tell ServiceFabric that this is where our app is.
+We do this in the he Endpoint node :  
 {% highlight xml %}
 <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
 {% endhighlight %}  
 
-The PathSuffix tells ServiceFabric that the entry point of the service is at  /Myapp/Web, which need to match where my app is served (the argument to the application). you want them both to match with the application name and the endpoint name, then you are all set.
+The PathSuffix tells ServiceFabric that the entry point of the service is at  /Myapp/Web. This needs to match where my app is served (the argument to the executable). We want them both to match with the ApplicationName and the endpoint Name, then we are all set.
 
 With this in place, we can use urls relative to the root of our app, through the proxy and when accessing the service directly. It all works fine as expected.
 Just make sure to use the tild syntax in your html : `href="~/Content/..."`  
 
-Passing the port as parameter to my application allows me to setup multiple instances at different port locally. In production with multiple instances, they would not be on the same machine, so it would not be a problem anyway.
+Passing the port as parameter to our application allows us to setup multiple instances at different port locally. In production, multiple instances would not be on the same machine, so it would not be a problem anyway.
 
 ## Let's Recap
 
