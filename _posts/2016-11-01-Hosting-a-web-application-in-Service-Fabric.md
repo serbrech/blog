@@ -119,22 +119,21 @@ I will focus on the tweaks I made to get it all work nicely.
 2. Chose link for the Code Package Behaviour on project creation (it's the default).  
 In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) : 
 
-{% highlight xml %}
-<Content Include="..\Web\bin\**\*.*"> 
-     <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
-</Content> 
-{% endhighlight %}  
+  {% highlight xml %}
+     <Content Include="..\Web\bin\**\*.*"> 
+          <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
+     </Content> 
+  {% endhighlight %}  
 
 3. ApplicationManifest  
-Nothing special here, except the ApplicationTypeName attribute.
+Nothing special here, except the ApplicationTypeName attribute.  
+     {% highlight xml %}
+     <ApplicationManifest ApplicationTypeName="MyApp" ...>
+     {% endhighlight %}
+     
+This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that below.  
 
-{% highlight xml %}
-<ApplicationManifest ApplicationTypeName="MyApp" ...>
-{% endhighlight %}
-
-This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that now.  
-
-4. ServiceManifest    
+4. ServiceManifest   
 That one is more interesting. Here is mine : 
 {% highlight xml %}
     <ServiceManifest Name="MyAppPkg"
@@ -192,12 +191,11 @@ that's the EntryPoint Argument node :
 
 The application responds on `http://localhost:3000/MyApp/Web`, so we have to tell ServiceFabric that this is where our app is.
 that's the role of the Endpoint node :  
-
 {% highlight xml %}
 <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
 {% endhighlight %}  
 
-If these match, you are good to go.  
+The PathSuffix tells ServiceFabric that the entry point of the service is at  /Myapp/Web, which need to match where my app is served (the argument to the application). you want them both to match with the application name and the endpoint name, then you are all set.
 
 With this in place, we can use urls relative to the root of our app, through the proxy and when accessing the service directly. It all works fine as expected.
 Just make sure to use the tild syntax in your html : `href="~/Content/..."`  
@@ -214,6 +212,7 @@ To host an existing IIS web app on Service Fabric we :
  - Linked our binaries to it
  - Adjusted the xml metadata
  - Parameterized the application root and the port to play nice with reverse proxy  
+ - Match the PathSuffix and the application root, with the ApplicationTypeName and endpoint Name.
  
 As a result, our application does not need to be aware of Service Fabric. It can still be run and debugged locally as any other application too. This is very nice. We get all the benefits from the platform, without taking any dependencies on it in any way!  
 
