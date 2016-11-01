@@ -2,18 +2,18 @@
 layout: post
 title: Hosting a web application in Service Fabric
 date: '2016-11-01T08:15:00+01:00'
-tags: microservices, service fabric
-image: "/blog/assets/article_images/2016-10-26-what-we-dont-tell-you/Menhirs_carnac.jpg"
-image2: "/blog/assets/article_images/2016-10-26-what-we-dont-tell-you/Menhirs_carnac.jpg"
+tags: microservices, servicefabric
+image: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
+image2: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
 ---
 
 Service Fabric is a platform that is designed to solve the challenges I exposed in my previous post on Microservices.
 It manages a cluster of machines, and let you work against it as if it was a single host. You send your app to Service Fabric, and the system will host it somewhere, and make it available at a given endpoint.
 It handles things like service discovery, revers proxy and load balancing, health monitoring, and more...
 
-So, to assess the platform, I'm starting by looking at what it takes to take an existing small web application, and deploy it on a Service Fabric cluster.
+So, to assess the platform, I look at what it takes to take an existing small web application, and deploy it on a Service Fabric cluster.
 It turns out that it is relatively easy.
-My application was a Nancy web app, simply deployed to IIS.
+My application test is a Nancy web app, deployed to IIS. this is a write up of what I had to do.
 
 ## Where to start.
 In Service Fabric, you have 2 main choices when it comes to the type of service you can host : Stateful or Stateless.
@@ -22,9 +22,9 @@ A Stateful service can store the data internally, using Reliable Collections pro
 For our example I will use a Stateless Service.
 
 So I want to host my Nancy application as a Stateless Service in the cluster. Ideally, I want my service to be unaware of Service Fabric. 
-Service Fabric supports (hosting any executable)[https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-existing-app/].
+Service Fabric supports [hosting any executable](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-existing-app/).
 
-## Step 1 : Make the web application self hosted
+## Step 1 : Make the web application self-hosted
 
 We are going ot use OWIN and it's self-host capabilities to achieve this.
 
@@ -48,8 +48,6 @@ namespace Web
     }
 }
 {% endhighlight %}
-
-![Console Application](/blog/assets/article_images/2016-11-01-hosting/consoleapp.png)
 
 {% highlight csharp %}
     public class Program
@@ -76,7 +74,11 @@ namespace Web
     }
 {% endhighlight %}
 
-When we self-host, (we have to tell our web framework where to find the files)[http://stackoverflow.com/questions/24571258/how-do-you-resolve-a-virtual-path-to-a-file-under-an-owin-host] (views, content, etc..).  
+Set build output to Console Application : 
+![Console Application](/blog/assets/article_images/2016-11-01-hosting/consoleapp.png)
+
+
+When we self-host, [we have to tell our web framework where to find the files](http://stackoverflow.com/questions/24571258/how-do-you-resolve-a-virtual-path-to-a-file-under-an-owin-host) (views, content, etc..).  
 With Nancy, we need to configure a RootPathProvider :  
 {% highlight csharp %}
 public class CustomRootPathProvider : IRootPathProvider
@@ -102,18 +104,18 @@ The next step is to host this executable in ServiceFabric.
 
 ## Step 2 : Guest Executable in Service Fabric
 
-For this, the Service Fabric SDK with VS tooling needs to be installed. the easiest way is by using the (Web Platform Installer)[https://www.microsoft.com/en-us/download/details.aspx?id=6164]
+For this, the Service Fabric SDK with VS tooling needs to be installed. the easiest way is by using the [Web Platform Installer](https://www.microsoft.com/en-us/download/details.aspx?id=6164)
 
 Then you can do Add New Project, search for Service Fabric, and add a Guest Exectuable Service Fabric project.
 This will keep the xml files that describe your executable within the service fabric files, instead of having to add them in your project. Note that the project is basically a set of XML files, a link to the binaries of your app, and a powershell script to deploy it to the cluster. So with some work, you could make this an infrastructure concern, and not even add this project to the solution.
 anyway, the procedure is described here : https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-existing-app/  
 
-I will focus on the tweaks I made to get it all to work nicely.
+I will focus on the tweaks I made to get it all work nicely.
 
 1. Set your project's Platform Target x64 (Project Properties > Build > Platform Target). Service Fabric supports only x64.  
 
 2. Chose link for the Code Package Behaviour on project creation (it's the default).  
-In my case, linking did not work recursively. So I edited the SF csproj according to (this Stackoverflow answer)[http://stackoverflow.com/a/11808911/156415] : 
+In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) : 
 
     <Content Include="..\Web\bin\**\*.*"> 
       <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
@@ -124,7 +126,7 @@ Nothing special here, except the ApplicationTypeName attribute.
 
     <ApplicationManifest ApplicationTypeName="MyApp" ...>
     
-This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that now.
+This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that now.  
 
 4. ServiceManifest  
 That one is more interesting. Here is mine : 
@@ -162,8 +164,8 @@ That one is more interesting. Here is mine :
 
 That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to Codebase. that's our binary folder in the package, and we pass some arguments.
 We define an http endpoint that listens on port 3000 (same as we passed as argument to our app), and a pathSuffix that I am going to explain in the last part of this post.
-From there, you have all the elements. if you have a cluster running locally, you can right-click-publish...shivers...
-once it is deployed, navigate to `localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
+From there, you have all the elements. if you have a cluster running locally, you can right-click-publish... shivers...
+Once it is deployed, navigate to `localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
 
 ## The last step: play nice with the Reverse Proxy
 
@@ -192,8 +194,18 @@ Just make sure to use the tild syntax in your html : `href="~/Content/..."`
 
 Passing the port as parameter to my application allows me to setup multiple instances at different port locally. In production with multiple instances, they would not be on the same machine, so it would not be a problem anyway.
 
+## Let's Recap
 
+To host an existing IIS web app on Service Fabric we :  
+ 
+ - Change our Platform Target to x64
+ - Made it Self-Hosted on OWIN
+ - Add a Service Fabric Guest Executable project to the solution
+ - Linked our binaries to it
+ - Adjusted the xml metadata
+ - Parameterized the application root and the port to play nice with reverse proxy
+ 
+As a result, our application does not need to be aware of Service Fabric. It can still be run and debugged locally as any other application too. This is very nice. We get all the benefits from the platform, without taking any dependencies on it in any way!  
 
-If you want to learn more about Service Fabric, you should start here : (Service Fabric Overview)[https://azure.microsoft.com/en-us/documentation/articles/service-fabric-overview/]  
-
+Notice as well that the Service Fabric project we add is just metadata. We could make this part of our deployment infrastructure, and not even get a Service Fabric related project in our solution. Heck, I think we will end up generating this based on conventions, and not worry about it for each project. Outstanding!
 
