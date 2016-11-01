@@ -124,51 +124,49 @@ In my case, linking did not work recursively. So I edited the SF csproj accordin
           </Content>  
 
 3. ApplicationManifest  
-Nothing special here, except the ApplicationTypeName attribute.  
+The ApplicationTypeName value is important as it defines the id of your application (and of your service) in Service Fabric service discovery system. It also ends up being part of the url to your service. More on that below.  
 
           <ApplicationManifest ApplicationTypeName="MyApp" ...>
-     
-     
-This value is important as it defines the id of your application (and part of your service) in Service Fabric service discovery system. It also ends up on the url of your service. more on that below.  
 
 4. ServiceManifest   
-That one is more interesting. Here is mine : 
-{% highlight xml %}
-    <ServiceManifest Name="MyAppPkg"
-                 Version="1.0.1"
-                 xmlns="http://schemas.microsoft.com/2011/01/fabric"
-                 xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-       <ServiceTypes>
-         <!-- This is the name of your ServiceType. 
-              The UseImplicitHost attribute indicates this is a guest executable service. -->
-         <StatelessServiceType ServiceTypeName="MyAppWeb" UseImplicitHost="true" />
-       </ServiceTypes>
+This one is more interesting. Here is mine : 
+          {% highlight xml %}
+              <ServiceManifest Name="MyAppPkg"
+                           Version="1.0.1"
+                           xmlns="http://schemas.microsoft.com/2011/01/fabric"
+                           xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                 <ServiceTypes>
+                   <!-- This is the name of your ServiceType. 
+                        The UseImplicitHost attribute indicates this is a guest executable service. -->
+                   <StatelessServiceType ServiceTypeName="MyAppWeb" UseImplicitHost="true" />
+                 </ServiceTypes>
 
-       <!-- Code package is your service executable. -->
-       <CodePackage Name="Code" Version="1.0.0">
-         <EntryPoint>
-           <ExeHost>
-             <Program>Web.exe</Program>
-             <Arguments>3000 MyApp/Web</Arguments>
-             <WorkingFolder>CodeBase</WorkingFolder>
-           </ExeHost>
-         </EntryPoint>
-       </CodePackage>
+                 <!-- Code package is your service executable. -->
+                 <CodePackage Name="Code" Version="1.0.0">
+                   <EntryPoint>
+                     <ExeHost>
+                       <Program>Web.exe</Program>
+                       <Arguments>3000 MyApp/Web</Arguments>
+                       <WorkingFolder>CodeBase</WorkingFolder>
+                     </ExeHost>
+                   </EntryPoint>
+                 </CodePackage>
 
-       <ConfigPackage Name="Config" Version="1.0.0" />
+                 <ConfigPackage Name="Config" Version="1.0.0" />
 
-       <Resources>
-         <Endpoints>
-           <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
-         </Endpoints>
-       </Resources>
-     </ServiceManifest>
-{% endhighlight %}  
+                 <Resources>
+                   <Endpoints>
+                     <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
+                   </Endpoints>
+                 </Resources>
+               </ServiceManifest>
+          {% endhighlight %}  
 
-That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to Codebase. that's our binary folder in the package, and we pass some arguments.
-We define an http endpoint that listens on port 3000 (same as we passed as argument to our app), and a pathSuffix that I am going to explain in the last part of this post.
-From there, you have all the elements. if you have a cluster running locally, you can right-click-publish... shivers...
+That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to `Codebase`. it's our binary folder in the service fabric package, and we pass some arguments to it.
+The Endpoint node defines where service fabric will find our service.
+We define an http endpoint that listens on port 3000 (the same as we passed as argument to our app), and a PathSuffix that I am going to explain in the last part of this post.
+From there, you have all the elements. if you have a cluster running locally, you can [right-click-publish](https://twitter.com/robpearson/status/731865398828630019)... shivers...
 Once it is deployed, navigate to `http://localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
 
 ## The last step: play nice with the Reverse Proxy
