@@ -202,13 +202,13 @@ Passing the port as parameter to my application allows me to setup multiple inst
 
 To host an existing IIS web app on Service Fabric we :  
  
- - Change our Platform Target to x64
+ - Changed our Platform Target to x64
  - Made it Self-Hosted on OWIN
- - Add a Service Fabric Guest Executable project to the solution
+ - Added a Service Fabric Guest Executable project to the solution
  - Linked our binaries to it
  - Adjusted the xml metadata
  - Parameterized the application root and the port to play nice with reverse proxy  
- - Match the PathSuffix and the application root, with the ApplicationTypeName and endpoint Name.
+ - Matched the PathSuffix and the application root, with the ApplicationTypeName and endpoint Name
  
 As a result, our application does not need to be aware of Service Fabric. It can still be run and debugged locally as any other application too. This is very nice. We get all the benefits from the platform, without taking any dependencies on it in any way!  
 
