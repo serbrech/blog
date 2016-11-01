@@ -7,9 +7,9 @@ image: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
 image2: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
 ---
 
-Service Fabric is a platform that is designed to solve the challenges I exposed in my previous post on Microservices.
-It manages a cluster of machines, and let you work against it as if it was a single host. You send your app to Service Fabric, and the system will host it somewhere, and make it available at a given endpoint.
-It handles things like service discovery, revers proxy and load balancing, health monitoring, and more...
+Service Fabric is a platform that is designed to solve the challenges I exposed [in my previous post on Microservices]({% post_url 2016-10-26-What-we-dont-tell-you-about-microservices %}).
+It manages a cluster of machines, and lets you work against it as if it was a single host. You send your app to Service Fabric, and the system will host it somewhere, and make it available at a given endpoint.
+Of course, that's highly simplified, it does much, much more. It handles things like service discovery, reverse proxy and load balancing, health monitoring, and scaling, stateful services and more...
 
 So, to assess the platform, I look at what it takes to take an existing small web application, and deploy it on a Service Fabric cluster.
 It turns out that it is relatively easy.
