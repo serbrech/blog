@@ -77,7 +77,7 @@ public class Program
 {% endhighlight %}
 
 Set build output to Console Application : 
-![Console Application](/blog/assets/article_images/2016-11-01-hosting/console.png)
+![Console Application](/blog/assets/article_images/2016-11-01-hosting/console.PNG)
 
 
 When we self-host, [we have to tell our web framework where to find the files](http://stackoverflow.com/questions/24571258/how-do-you-resolve-a-virtual-path-to-a-file-under-an-owin-host) (views, content, etc..).  
