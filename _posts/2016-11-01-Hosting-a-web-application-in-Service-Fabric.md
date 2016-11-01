@@ -100,7 +100,7 @@ public class Bootstrapper : DefaultNancyBootstrapper
 }
 {% endhighlight %}
 
-That's it, the app is now self-hosted. you can start it as a console app by running F5 and open your browser at `http:localhost:1234`.
+That's it, the app is now self-hosted. you can start it as a console app by running F5 and open your browser at `http://localhost:1234`.
 
 The next step is to host this executable in ServiceFabric.
 
@@ -172,7 +172,7 @@ That one is more interesting. Here is mine :
 That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to Codebase. that's our binary folder in the package, and we pass some arguments.
 We define an http endpoint that listens on port 3000 (same as we passed as argument to our app), and a pathSuffix that I am going to explain in the last part of this post.
 From there, you have all the elements. if you have a cluster running locally, you can right-click-publish... shivers...
-Once it is deployed, navigate to `localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
+Once it is deployed, navigate to `http://localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
 
 ## The last step: play nice with the Reverse Proxy
 
@@ -190,7 +190,7 @@ that's the EntryPoint Argument node :
 <Arguments>3000 MyApp/Web</Arguments>
 {% endhighlight %}  
 
-The application responds on localhost:3000/MyApp/Web, so we have to tell ServiceFabric that this is where our app is.
+The application responds on `http://localhost:3000/MyApp/Web`, so we have to tell ServiceFabric that this is where our app is.
 that's the role of the Endpoint node :  
 
 {% highlight xml %}
