@@ -7,7 +7,7 @@ image: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
 image2: "/blog/assets/article_images/2016-11-01-hosting/andromeda-galaxy.jpg"
 ---
 
-Service Fabric is a platform that is designed to solve the challenges I exposed [in my previous post on Microservices]({{ site.baseurl }}{% post_url 2016-10-26-What-we-dont-tell-you-about-microservices %}).
+Service Fabric is a platform that is designed to solve the challenges I exposed [in my previous post on Microservices]({{ site.baseurl }}{% post_url 2016-10-26-What-we-dont-tell-you-about-microservices %}). 
 It manages a cluster of machines, and lets you work against it as if it was a single host. You send your app to Service Fabric, and the system will host it somewhere, and make it available at a given endpoint.
 Of course, that's highly simplified, it does much, much more. It handles things like service discovery, reverse proxy and load balancing, health monitoring, and scaling, stateful services and more...
 
@@ -27,8 +27,7 @@ Service Fabric supports [hosting any executable](https://azure.microsoft.com/en-
 
 ## Step 1 : Make the web application self-hosted
 
-We are going ot use OWIN and it's self-host capabilities to achieve this.
-
+We are going ot use OWIN and it's self-host capabilities to achieve this.  
 I start by adding the owin packages to my project : 
 
      "Microsoft.Owin.Host.HttpListener": "3.0.1"
@@ -76,7 +75,7 @@ public class Program
 }
 {% endhighlight %}
 
-Set build output to Console Application : 
+Set the build output to `Console Application` : 
 ![Console Application](/blog/assets/article_images/2016-11-01-hosting/console.PNG)
 
 
@@ -108,28 +107,32 @@ The next step is to host this executable in ServiceFabric.
 
 For this, the Service Fabric SDK with VS tooling needs to be installed. the easiest way is by using the [Web Platform Installer](https://www.microsoft.com/en-us/download/details.aspx?id=6164)
 
-Then you can do Add New Project, search for Service Fabric, and add a Guest Exectuable Service Fabric project.
-This will keep the xml files that describe your executable within the service fabric files, instead of having to add them in your project. Note that the project is basically a set of XML files, a link to the binaries of your app, and a powershell script to deploy it to the cluster. So with some work, you could make this an infrastructure concern, and not even add this project to the solution.
-anyway, the procedure is described here : https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-existing-app/  
+I like to keep my code agnostic of the infrastructure. This is why I choose the guest executable. 
+If you have the SDK installed, you can do Add New Project, search for Service Fabric, and add a Guest Exectuable Service Fabric project to your solution.
+This will keep the xml files that describe your executable (ServiceManifext.xml) within the service fabric project, instead of having to mix them in your web project. Note that the Service Fabric project is basically a set of XML files, a link to the binaries of your app, and a powershell script to deploy it to the cluster. So with some work, you could make this an infrastructure concern, and not even add this project to the solution.
+Anyway, the procedure is well described here : [Deploy a guest executable to Service Fabric](https://azure.microsoft.com/en-us/documentation/articles/service-fabric-deploy-existing-app/)  
 
 I will focus on the tweaks I made to get it all work nicely.
 
 1. Set your project's Platform Target x64 (Project Properties > Build > Platform Target). Service Fabric supports only x64.  
 
-2. Chose link for the Code Package Behaviour on project creation (it's the default).  
+2. Choose link for the Code Package Behaviour on project creation (it's the default).  
 In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) :
 
           <Content Include="..\Web\bin\**\*.*"> 
                <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
           </Content>  
 
+This will ensure that subfolders are also included (i.e: content, js, views, etc..).  
+
 3. ApplicationManifest  
+An application in Service fabric can be composed of multiple services and endpoints. It is your deployment unit.
 The ApplicationTypeName value is important as it defines the id of your application (and of your service) in Service Fabric service discovery system. It also ends up being part of the url to your service. More on that below.  
 
           <ApplicationManifest ApplicationTypeName="MyApp" ...>
 
 4. ServiceManifest   
-This one is more interesting. Here is mine : 
+This one is more interesting. It will describe the endpoints to reach your system. Here what I ended up with, I will explain below :  
           {% highlight xml %}
               <ServiceManifest Name="MyAppPkg"
                            Version="1.0.1"
@@ -163,10 +166,10 @@ This one is more interesting. Here is mine :
                </ServiceManifest>
           {% endhighlight %}  
 
-That declares a Stateless service. The entrypoint is our Web.exe binary. we set the working directory to `Codebase`. it's our binary folder in the service fabric package, and we pass some arguments to it.
-The Endpoint node defines where service fabric will find our service.
-We define an http endpoint that listens on port 3000 (the same as we passed as argument to our app), and a PathSuffix that I am going to explain in the last part of this post.
-From there, you have all the elements. if you have a cluster running locally, you can [right-click-publish](https://twitter.com/robpearson/status/731865398828630019)... shivers...
+This xml declares a Stateless service. The `EntryPoint` is our `Web.exe` binary. We set the working directory to `Codebase`. Codebase points to our binary folder in the service fabric package. We also pass it some arguments.  
+The `Endpoint` node defines where service fabric will find our service.
+We define an http endpoint that listens on port 3000, and a PathSuffix that I am going to explain in the last part of this post. I see the Endpoint definition as telling the Service Fabric runtime how to contact our application. if your web app listens on port 3000, you will need to define port 3000 here.
+From there, you have all the elements. if you have a cluster running locally, you can [right-click-publish](https://twitter.com/robpearson/status/731865398828630019)... Shivers...
 Once it is deployed, navigate to `http://localhost:3000/Myapp/Web` and TADA your app is there. Beautiful isn't it?
 
 ## The last step: play nice with the Reverse Proxy
@@ -191,7 +194,7 @@ We do this in the he Endpoint node :
 <Endpoint Name="Web" Protocol="http" UriScheme="http" Type="Input" Port="3000" PathSuffix="MyApp/Web"/>
 {% endhighlight %}  
 
-The PathSuffix tells ServiceFabric that the entry point of the service is at  /Myapp/Web. This needs to match where my app is served (the argument to the executable). We want them both to match with the ApplicationName and the endpoint Name, then we are all set.
+The PathSuffix tells ServiceFabric that the entry point of the service is at `/Myapp/Web`. This needs to match where my app is served (the argument to the executable). We want them both to match with the ApplicationName and the endpoint Name, then we are all set.
 
 With this in place, we can use urls relative to the root of our app, through the proxy and when accessing the service directly. It all works fine as expected.
 Just make sure to use the tild syntax in your html : `href="~/Content/..."`  
