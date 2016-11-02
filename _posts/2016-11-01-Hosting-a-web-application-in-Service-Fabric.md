@@ -117,13 +117,11 @@ I will focus on the tweaks I made to get it all work nicely.
 1. Set your project's Platform Target x64 (Project Properties > Build > Platform Target). Service Fabric supports only x64.  
 
 2. Choose link for the Code Package Behaviour on project creation (it's the default).  
-In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415) :
+In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415). This will ensure that subfolders are also included (i.e: content, js, views, etc..). :  
 
           <Content Include="..\Web\bin\**\*.*"> 
                <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
-          </Content>  
-
-This will ensure that subfolders are also included (i.e: content, js, views, etc..).  
+          </Content>
 
 3. ApplicationManifest  
 An application in Service fabric can be composed of multiple services and endpoints. It is your deployment unit.
