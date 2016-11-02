@@ -120,7 +120,7 @@ I will focus on the tweaks I made to get it all work nicely.
 In my case, linking did not work recursively. So I edited the SF csproj according to [this Stackoverflow answer](http://stackoverflow.com/a/11808911/156415). This will ensure that subfolders are also included (i.e: content, js, views, etc..). :  
 
           <Content Include="..\Web\bin\**\*.*"> 
-               <Link>ApplicationPackageRoot\ElectronicConsentPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
+               <Link>ApplicationPackageRoot\MyAppPkg\Code\%(RecursiveDir)%(FileName)%(Extension)</Link>
           </Content>
 
 3. ApplicationManifest  
