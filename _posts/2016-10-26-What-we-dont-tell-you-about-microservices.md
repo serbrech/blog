@@ -1,6 +1,7 @@
 ---
 layout: post
 title: What we don't tell you about microservices
+excerpt: My current client has a long lived software that has evolved over about 10 years. It is a large codebase, that started as monolithic. The system was slowly split into services and of course, WCF was used to make them communicate.
 date: '2016-10-27T08:15:00+01:00'
 tags: microservices, architecture, devops
 image: "/blog/assets/article_images/2016-10-26-what-we-dont-tell-you/Menhirs_carnac.jpg"
@@ -10,8 +11,8 @@ image2: "/blog/assets/article_images/2016-10-26-what-we-dont-tell-you/Menhirs_ca
 # Setting the stage
 
 My current client has a long lived software that has evolved over about 10 years. It is a large codebase, that started as monolithic.
-Then splitted it into services, and made them communicate with WCF. 
-Trying to follow good SOA design, Message Queues and NServiceBus was introduced before it was even cool.
+The system was slowly split into services and of course, WCF was used to make them communicate. 
+Trying to follow good SOA design, Message Queues and NServiceBus were introduced before it was even cool.
 This multi-services system, although "distributed", is really just one big monolithic system,
 with strong inter-dependencies, running in multiple processes.  
 The single big bang deployment of the whole code base once a month is a good sign of that.   
