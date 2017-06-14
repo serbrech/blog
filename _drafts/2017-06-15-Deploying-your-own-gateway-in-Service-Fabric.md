@@ -7,11 +7,11 @@ image: "/blog/assets/article_images/ServiceFabric/sfheader.jpg"
 image2: "/blog/assets/article_images/ServiceFabric/sfheader.jpg"
 ---
 
-In my previous article [Hosting a web application in Service Fabric]({{ site.baseurl }}{% post_url 2016-11-01-Hosting-a-web-application-in-Service-Fabric %}), we deployed a Guest Executable and exposed the application using the built-in reverse proxy and gateway from Service Fabric. This works well, and it gives you an out of the box solution to reach into your cluster, from outside of it.
+In my previous article [Hosting a web application in Service Fabric]({{ site.baseurl }}{% post_url 2016-11-01-Hosting-a-web-application-in-Service-Fabric %}), we deployed a Guest Executable and exposed the application using the built-in `Service Fabric Reverse Proxy`. This works well, and it gives you an out of the box solution to reach into your cluster, from outside of it.
 
-[Exposing the Reverse Proxy through the load balancer exposes the services inside your cluster]({{ site.baseurl }}/assets/article_images/2017-06-15-Deploying-gateway/Warning.PNG)
+![Exposing the Reverse Proxy through the load balancer exposes the services inside your cluster]({{ site.baseurl }}/assets/article_images/2017-06-15-Deploying-gateway/external-communication.png)
 
-Unfortunately, the built-in gateway does not give you any control over which application will be exposed, nor does it allow you to rewrite urls. In practice, it means that if you enable the reverse proxy, and expose it to the outside world, everything that runs in your cluster is suddenly exposed. 
+Unfortunately, the built-in gateway does not give you any control over which application will be exposed, nor does it allow you to rewrite urls. In practice, it means that if you enable the reverse proxy, and expose it to the outside world, *everything* endpoints in your cluster are suddenly exposed. 
 
 [The documentation](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-reverseproxy) makes quite this clear : 
 
