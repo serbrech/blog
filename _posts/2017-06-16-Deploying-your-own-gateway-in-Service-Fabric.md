@@ -49,7 +49,7 @@ To let Service Fabric select a port, we will remove the `Port` attribute from th
   <Endpoint Protocol="http" Name="ServiceEndpoint" Type="Input" />
 {% endhighlight %}
 
-At this point, if your Reverse proxy is enable, you can reach your website through the built-in Reverse Proxy at http://<FQDN>:19081/<ApplicationName>/<ServiceName>
+At this point, if your Reverse proxy is enable, you can reach your website through the built-in Reverse Proxy at `http://<FQDN>:19081/<ApplicationName>/<ServiceName>`
 
 Deploying on a local development cluster in my case, that is `http://localhost:19081/MyApp/WebService/`
 
@@ -187,7 +187,7 @@ Note that the Load Balancer defines a `Health Probe`. If the health probe does n
 
 And Voilà!  
  
-I can now reach the website on `http://[FQDN]/MyAwesomeWebsite` and all relative links and resources work!
+I can now reach the website on `http://<FQDN>/MyAwesomeWebsite` and all relative links and resources work!
 I hope this was useful. Do not hesitate to reach out in the comments below, or tweet at me: [@serbrech](https://twitter.com/serbrech/)
 
 
