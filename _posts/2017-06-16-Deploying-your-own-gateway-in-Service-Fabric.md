@@ -7,7 +7,7 @@ tags: microservices, servicefabric
 image: "/blog/assets/article_images/2017-06-15-Deploying-gateway/gateSF.png"
 image2: "/blog/assets/article_images/2017-06-15-Deploying-gateway/gateSF.png"
 ---
-#Service Fabric reverse proxy
+# Service Fabric reverse proxy
 
 In my previous article [Hosting a web application in Service Fabric]({{ site.baseurl }}{% post_url 2016-11-01-Hosting-a-web-application-in-Service-Fabric %}), we deployed an OWIN hosted website as a Guest Executable and accessed the application using the built-in `Service Fabric Reverse Proxy`. This works, and it gives you an out of the box solution to reach into your cluster from outside of it : 
 
@@ -28,7 +28,7 @@ In this article, here is what we will do :
 - Handle the proxy url forwarded headers in our application  
 - Configure the Azure Load Balancer to point at our new gateway  
 
-#Our sample project
+# Our sample project
 
 My sample project just contains the default asp.net service. This will represent the service you want to expose. not our gateway. 
 
@@ -54,7 +54,7 @@ Deploying on a local development cluster in my case, that is `http://localhost:1
 
 As warned earlier, that's not what you want to expose to the outside world.
 
-#Deploy your own gateway
+# Deploy your own gateway
 
 It sounds like a lot of work, but bear with me, it's actually very simple. We need the same sort of behaviour as the reverse proxy, only with a little bit more control.
 
@@ -124,7 +124,7 @@ The `RunHttpServiceGateway` method maps the path `/MyAwesomeWebsite` to the root
 
 Now, whenever you hit the gateway on port `1664`, at the path `/MyAwesomeWebsite`, the gateway will use the Naming Service to locate `fabric:/MyApp/WebService` in the cluster and your request will be forwarded to one of the instances.
 
-#Application Urls, Reverse Proxy and X-Forwarded-* headers
+# Application Urls, Reverse Proxy and X-Forwarded-* headers
 
 When you put your application behind a proxy, the request url might not match the resource url. This means your application will not be able to construct the relative urls.  
 For example when I navigate to `/MyAwesomeWebsite`, my website thinks I am on `/`, because that is where the request was forwarded to by the gateway.  
@@ -172,7 +172,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 }
 {% endhighlight %} 
 
-#Configure the Azure Load Balancer
+# Configure the Azure Load Balancer
 
 Of course, nobody wants to access your website on port `1664`. Next, we need set up the load balancer to point at our newly deployed gateway.
 On a fresh cluster deployed on azure ([in one powershell line!](https://noelbundick.com/2017/05/12/Service-Fabric-Cluster-Quickstart/)), 
