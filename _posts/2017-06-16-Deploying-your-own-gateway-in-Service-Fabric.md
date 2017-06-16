@@ -2,6 +2,7 @@
 layout: post
 title: Deploying your own gateway in Service Fabric
 date: '2017-06-16T13:15:00+01:00'
+excerpt: After explaining why it is needed and using a sample project, we will walk through the configurartion and deployment of your own gateway service within Service Fabric. I show you how to handle the proxy url forwarded headers in our application, and finally, I explain how to setup the azure load balancer to point at the new gateway.  
 tags: microservices, servicefabric
 image: "/blog/assets/article_images/ServiceFabric/sfheader.jpg"
 image2: "/blog/assets/article_images/ServiceFabric/sfheader.jpg"
@@ -18,13 +19,13 @@ Unfortunately, the built-in Reverse Proxy does not give you any control over whi
 
 ![Warning! When you configure the reverse proxy's port in Load Balancer, all microservices in the cluster that expose an HTTP endpoint are addressable from outside the cluster.]({{ site.baseurl }}/assets/article_images/2017-06-15-Deploying-gateway/Warning.PNG)
 
-Of course, we do not want this. So how do we expose our http endpoints selectively? 
+Of course, we do not want this. So how do we expose our http endpoints selectively?  
 
 In this article, here is what we will do :  
 
 - Use a sample project with a single default aspnet web application deployed in Service Fabric described below  
 - Configure and deploy our own gateway  
-- Handle the proxy rewrite in our application, and setup the azure load balancer to point at the new gateway  
+- Handle the proxy url forwarded headers in our application  
 - Configure the Azure Load Balancer to point at our new gateway  
 
 #Our sample project
