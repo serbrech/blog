@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title: Deploying your own gateway in Service Fabric
 date: '2017-06-16T13:15:00+01:00'
 excerpt: After explaining why it is needed and using a sample project, we will walk through the configurartion and deployment of your own gateway service within Service Fabric. I show you how to handle the proxy url forwarded headers in our application, and finally, I explain how to setup the azure load balancer to point at the new gateway.  
