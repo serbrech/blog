@@ -30,7 +30,8 @@ In this article, here is what we will do :
 
 # Our sample project
 
-My sample project just contains the default asp.net service. This will represent the service you want to expose. not our gateway. 
+You can grab the exact solution and code I used for this blog post in this gihub repo : [https://github.com/serbrech/deploy-own-gateway-SF](https://github.com/serbrech/deploy-own-gateway-SF) 
+My sample project just contains a default asp.net service. This will represent the service you want to expose. 
 
 ![default asp.net core stateless service]({{ site.baseurl }}/assets/article_images/2017-06-15-Deploying-gateway/default-aspnet-service.PNG)
 
