@@ -3,11 +3,13 @@ gems:
   - jemoji
   - jekyll-paginate
   - jekyll-redirect-from
+  - jekyll-gist
 
 whitelist:
   - jekyll-redirect-from
   - jemoji
   - jekyll-paginate
+  - jekyll-gist
 
 # Site settings
 title: "Stéphane Erbrech - Blog"
