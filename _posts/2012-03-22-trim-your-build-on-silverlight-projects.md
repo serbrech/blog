@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: f54a9c30210d41928f05c9e7096e476d
 title: Trim your build on Silverlight projects!
 date: '2012-03-22T15:25:00+01:00'
 tags:

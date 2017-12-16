@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 85783c8a48ec4b328c65bb617a2b24a5
 title: Using psake to run your TeamCity continuous integration build
 date: '2012-07-17T14:09:00+02:00'
 tags:

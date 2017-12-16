@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 5f80e79e53124ae3a3cce9e5fac24804
 title: Find the local path from a local UNC network share path with Powershell
 date: '2013-12-18T09:38:14+01:00'
 tags:

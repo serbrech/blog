@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 283ac0cd45f84aa6b39e41be5281331e
 title: Move msmq storage location with powershell and Desired State Configuration
 date: '2016-05-29T18:00:00+02:00'
 tags: powershell, dsc, msmq

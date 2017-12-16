@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 9d0e32124dd64542b7628ed03ce1270c
 title: What we don't tell you about microservices
 excerpt: My current client has a long lived software that has evolved over about 10 years. It is a large codebase, that started as monolithic. The system was slowly split into services and of course, WCF was used to make them communicate.
 date: '2016-10-27T08:15:00'

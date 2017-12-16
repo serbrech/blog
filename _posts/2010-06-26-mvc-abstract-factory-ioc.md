@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 9e299d6785844804924369116ff89059
 title: Abstract Factory and IoC Container in asp.net MVC
 date: '2010-06-26T17:38:00+02:00'
 tags:

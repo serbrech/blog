@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: e4d8749a286844ffb1c1806efb42fbc5
 title: Running Solr as a windows service
 date: '2012-06-15T13:23:00+02:00'
 tags:

@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: c4619d152c7642e590a909574119120d
 title: Testing the IDataReader mapping
 date: '2012-09-13T14:24:00+02:00'
 tags:

@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: df27e02958234b61af18d21e77ac159f
 title: Running Nunit tests in Teamcity using wildcards to find dlls
 date: '2013-12-16T15:19:00+01:00'
 tags:

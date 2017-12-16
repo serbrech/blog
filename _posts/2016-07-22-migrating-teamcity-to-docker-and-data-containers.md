@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: e61c1f4b5c5e471294a10e3524fee7c8
 title: Migrating TeamCity to docker with data containers
 date: '2016-07-22T17:45:00+02:00'
 tags: teamcity, docker

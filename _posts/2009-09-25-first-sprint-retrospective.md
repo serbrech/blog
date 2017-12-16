@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: f9c9528175ef446fa032effd88d9e5e0
 title: First sprint retrospective
 date: '2009-09-25T16:35:00+02:00'
 tags:

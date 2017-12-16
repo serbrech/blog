@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 73627453b3e543029de1014e730d8a69
 comments: true
 title: Deploying your own gateway in Service Fabric
 date: '2017-06-16T13:15:00+01:00'

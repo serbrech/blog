@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: fe7f2e842ec24b9aa2dc9866953d182c
 title: How I startup all my project services in multiple terminal tabs in one command
 date: '2012-04-25T21:27:00+02:00'
 tags:

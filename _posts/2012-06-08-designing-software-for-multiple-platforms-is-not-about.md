@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: cf6198ce67db41ba927bccb7c5463b53
 title: Designing software for multiple platforms is not about making them similar
 date: '2012-06-08T19:33:36+02:00'
 tags:

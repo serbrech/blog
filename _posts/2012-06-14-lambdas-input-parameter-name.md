@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 95ee4fc867184c628a66768b8ea27901
 title: Lambdas input parameter name
 date: '2012-06-14T00:16:00+02:00'
 tags:

@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: 258d55804ad34ee0afe6321a0ac52436
 title: Hosting a web application in Service Fabric
 date: '2016-11-01T08:15:00'
 tags: microservices, servicefabric

@@ -1,5 +1,6 @@
 ---
 layout: post
+identifier: fbabdd69b6534916aa86367a0ac3cbce
 title: 'Stop the war between NUnit and MSTest : Make them friends'
 date: '2010-03-09T00:00:00+01:00'
 tags:
